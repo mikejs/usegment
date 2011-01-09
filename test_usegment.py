@@ -16,7 +16,7 @@ def test_break_property():
     assert usegment.break_property(u'\uAC01') == 'LVT'
     assert usegment.break_property(u'\u0903') == 'SpacingMark'
     assert usegment.break_property(u'\u0E40') == 'Prepend'
-    assert usegment.break_property(u'\u0308') == 'Extend'    
+    assert usegment.break_property(u'\u0308') == 'Extend'
     assert usegment.break_property(u' ') == 'Other'
     assert usegment.break_property(u'a') == 'Other'
     assert usegment.break_property(u'S') == 'Other'
@@ -54,3 +54,15 @@ def test_grapheme_break():
             print 'Got: ', got
 
             assert got == expect
+
+
+def test_codepoints():
+    assert list(usegment.codepoints(u'abc')) == [97, 98, 99]
+
+    expect = [97, 0x10000, 98]
+    got = list(usegment.codepoints(u'a\U00010000b'))
+    assert got == expect
+
+    expect = [97, 0x1D11E, 0x10000, 98]
+    got = list(usegment.codepoints(u'a\U0001D11E\U00010000b'))
+    assert got == expect
